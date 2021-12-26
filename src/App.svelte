@@ -13,7 +13,9 @@
       body: JSON.stringify(formData),
     });
     const responseJSON = await response.json();
-    result.set(responseJSON.result.success ? "email was sent" : "error occured");
+    result.set(
+      responseJSON.result.success ? "email was sent" : "error occured",
+    );
     isLoading = false;
   };
 </script>
@@ -49,7 +51,7 @@
         placeholder="Confirm password"
         bind:value={formData.confirmPassword}
       />
-      <input type="submit" disabled={isLoading} value="Send"/>
+      <input type="submit" disabled={isLoading} value="Send" />
     </form>
     <div>
       <p>{$result}</p>
@@ -64,13 +66,16 @@
     max-width: 240px;
     margin: 0 auto;
   }
-  form{
+
+  form {
     border: 1px solid #333;
     padding: 20px;
     border-radius: 5px;
-    box-shadow: 10px 5px 5px rgb(83, 83, 83,0.4);
+    box-shadow: 10px 5px 5px #838383;
+    opacity: 0.4;
   }
-  input{
-      border: 1px solid #666;
+
+  input {
+    border: 1px solid #666;
   }
 </style>
