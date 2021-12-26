@@ -72,7 +72,6 @@
     padding: 20px;
     border-radius: 5px;
     box-shadow: 10px 5px 5px #838383;
-    opacity: 0.4;
   }
 
   input {
