@@ -69,7 +69,7 @@ const validate = (body) => {
 
 module.exports = async (req, res) => {
   try {
-    rateLimit(req.headers["x-real-ip"], 5);
+    rateLimit(req.headers["x-real-ip"], 2);
   } catch (e) {
     return res.status(429).json({
       status: 429,
