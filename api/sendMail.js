@@ -23,7 +23,7 @@ async function sendMail(options) {
     throw new Error(error?.message);
   }
 }
-const from = `Paul Vasssssss - ${process.env.EMAIL_ADRESS}`;
+const from = `Nastya Lytvyn - ${process.env.EMAIL_ADRESS}`;
 async function formSubmit(formData) {
   let html = "";
   for (const option in formData) {
@@ -69,7 +69,7 @@ const validate = (body) => {
 
 module.exports = async (req, res) => {
   try {
-    rateLimit(req.headers["x-real-ip"], 2);
+    rateLimit(req.headers["x-real-ip"], 1);
   } catch (e) {
     return res.status(429).json({
       status: 429,
