@@ -3,20 +3,28 @@
   let isLoading = false;
   let result = writable("");
   const formData = {};
+  const API_URL = "/api/sendMail";
   const submit = async () => {
     isLoading = true;
-    const response = await fetch("/api/sendMail", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-      body: JSON.stringify(formData),
-    });
-    const responseJSON = await response.json();
-    result.set(
-      responseJSON.result.success ? "email was sent" : "error occured",
-    );
-    isLoading = false;
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+        body: JSON.stringify(formData),
+      });
+      const responseJSON = await response.json();
+      if (!responseJSON.result.success) {
+        result.set(responseJSON.errors.join(";"));
+      } else {
+        result.set("Email was sent");
+      }
+    } catch (e) {
+      result.set("error occured");
+    } finally {
+      isLoading = false;
+    }
   };
 </script>
 
@@ -60,6 +68,12 @@
 </main>
 
 <style>
+  :root {
+    --dark: #333;
+    --lighter: #838383;
+    --light: #666;
+  }
+
   main {
     text-align: center;
     padding: 1em;
@@ -68,13 +82,13 @@
   }
 
   form {
-    border: 1px solid #333;
+    border: 1px solid var(--dark);
     padding: 20px;
     border-radius: 5px;
-    box-shadow: 10px 5px 5px #838383;
+    box-shadow: 10px 5px 5px var(--lighter);
   }
 
   input {
-    border: 1px solid #666;
+    border: 1px solid var(--light);
   }
 </style>

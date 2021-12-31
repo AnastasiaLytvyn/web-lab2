@@ -14,9 +14,10 @@ function getTransporter() {
   });
 }
 
+const transport = getTransporter();
+
 async function sendMail(options) {
   try {
-    const transport = getTransporter();
     await transport.sendMail(options);
     return { success: true };
   } catch (error) {
@@ -52,16 +53,16 @@ const nameValid = /[a-zA-ZЁёА-я]+$/;
 const validate = (body) => {
   const { email, name, password, confirmPassword } = body;
   if (!email || !name || !password || !confirmPassword) {
-    throw new Error();
+    throw new Error("Empty fields");
   }
   if (!emailValid.test(email)) {
-    throw new Error();
+    throw new Error("Email not valid");
   }
   if (!nameValid.test(name)) {
-    throw new Error();
+    throw new Error("Name not valid");
   }
   if (password !== confirmPassword) {
-    throw new Error();
+    throw new Error("Password doesn`t match");
   }
 };
 
@@ -82,12 +83,22 @@ module.exports = async (req, res) => {
   } catch (e) {
     return res.status(403).json({
       status: 403,
-      errors: ["Validation error"],
+      errors: ["Validation error", e.message],
       result: {
         success: false,
       },
     });
   }
-  const result = await formSubmit(req.body);
-  res.json({ result });
+  try {
+    const result = await formSubmit(req.body);
+    return res.json({ result });
+  } catch (e) {
+    return res.status(400).json({
+      status: 400,
+      errors: ["Error while sending email", e.message],
+      result: {
+        success: false,
+      },
+    });
+  }
 };
