@@ -4,8 +4,8 @@ require("dotenv").config();
 
 function getTransporter() {
   return createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
     secure: false,
     auth: {
       user: process.env.EMAIL_ADRESS,
@@ -38,14 +38,12 @@ async function formSubmit(formData) {
 }
 
 const history = new Map();
+const count = history.has(ip) || 0;
 const rateLimit = (ip, limit = 3) => {
-  if (!history.has(ip)) {
-    history.set(ip, 0);
-  }
-  if (history.get(ip) > limit) {
+  if (count > limit) {
     throw new Error();
   }
-  history.set(ip, history.get(ip) + 1);
+  history.set(ip, count + 1);
 };
 
 const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
