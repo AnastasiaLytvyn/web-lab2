@@ -38,8 +38,8 @@ async function formSubmit(formData) {
 }
 
 const history = new Map();
-const count = history.has(ip) || 0;
 const rateLimit = (ip, limit = 3) => {
+  const count = history.has(ip) || 0;
   if (count > limit) {
     throw new Error();
   }
