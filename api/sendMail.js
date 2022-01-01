@@ -69,7 +69,7 @@ const validate = (body) => {
 
 module.exports = async (req, res) => {
   try {
-    rateLimit(req.headers["x-real-ip"], 1);
+    rateLimit(req.headers["x-real-ip"], 3);
     validate(req.body);
     const result = await formSubmit(req.body);
     return res.json({ result });
