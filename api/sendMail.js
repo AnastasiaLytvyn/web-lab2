@@ -1,5 +1,6 @@
 import { createTransport } from "nodemailer";
 import sanitizeHtml from "sanitize-html";
+import { ApiError } from "./../src/ApiError";
 require("dotenv").config();
 
 function getTransporter() {
@@ -42,7 +43,7 @@ const history = new Map();
 const rateLimit = (ip, limit = 3) => {
   const count = history.get(ip) || 0;
   if (count > limit) {
-    throw new Error();
+    throw ApiError.RateLimitError();
   }
   history.set(ip, count + 1);
 };
@@ -53,49 +54,29 @@ const nameValid = /[a-zA-ZЁёА-я]+$/;
 const validate = (body) => {
   const { email, name, password, confirmPassword } = body;
   if (!email || !name || !password || !confirmPassword) {
-    throw new Error("Empty fields");
+    throw ApiError.ValidationError("Empty fields");
   }
   if (!emailValid.test(email)) {
-    throw new Error("Email not valid");
+    throw ApiError.ValidationError("Email not valid");
   }
   if (!nameValid.test(name)) {
-    throw new Error("Name not valid");
+    throw ApiError.ValidationError("Name not valid");
   }
   if (password !== confirmPassword) {
-    throw new Error("Password doesn`t match");
+    throw ApiError.ValidationError("Password doesn`t match");
   }
 };
 
 module.exports = async (req, res) => {
   try {
     rateLimit(req.headers["x-real-ip"], 1);
-  } catch (e) {
-    return res.status(429).json({
-      status: 429,
-      errors: ["too many requests"],
-      result: {
-        success: false,
-      },
-    });
-  }
-  try {
     validate(req.body);
-  } catch (e) {
-    return res.status(403).json({
-      status: 403,
-      errors: ["Validation error", e.message],
-      result: {
-        success: false,
-      },
-    });
-  }
-  try {
     const result = await formSubmit(req.body);
     return res.json({ result });
   } catch (e) {
-    return res.status(400).json({
-      status: 400,
-      errors: ["Error while sending email", e.message],
+    return res.status(e.status).json({
+      status: e.status,
+      errors: [e.message],
       result: {
         success: false,
       },
