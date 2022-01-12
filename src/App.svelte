@@ -15,12 +15,12 @@
       });
       const responseJSON = await response.json();
       if (!responseJSON.result.success) {
-        result=responseJSON.errors.join(";");
+        result = responseJSON.errors.join(";");
       } else {
-        result="Email was sent";
+        result = "Email was sent";
       }
     } catch (e) {
-      result="error occured";
+      result = "error occured";
     } finally {
       isLoading = false;
     }

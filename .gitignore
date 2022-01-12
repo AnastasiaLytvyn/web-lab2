@@ -4,7 +4,4 @@
 .env
 .env.local
 .env.build
-
-.vercel
-
 .vercel
