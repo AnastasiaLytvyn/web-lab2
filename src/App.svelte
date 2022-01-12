@@ -15,12 +15,12 @@
       });
       const responseJSON = await response.json();
       if (!responseJSON.result.success) {
-        result.set(responseJSON.errors.join(";"));
+        result=responseJSON.errors.join(";");
       } else {
-        result.set("Email was sent");
+        result="Email was sent";
       }
     } catch (e) {
-      result.set("error occured");
+      result="error occured";
     } finally {
       isLoading = false;
     }
@@ -61,7 +61,7 @@
       <input type="submit" disabled={isLoading} value="Send" />
     </form>
     <div>
-      <p>{$result}</p>
+      <p>{result}</p>
     </div>
   {/if}
 </main>
