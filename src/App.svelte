@@ -1,7 +1,6 @@
 <script>
-  import { writable } from "svelte/store";
   let isLoading = false;
-  let result = writable("");
+  let result = "";
   const formData = {};
   const API_URL = "/api/sendMail";
   const submit = async () => {
